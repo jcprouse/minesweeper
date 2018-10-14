@@ -4,7 +4,7 @@
 }
 
 .row:first-child .square{
-    border-top:1px solid black;
+    border-top:1px solid #106d29;
 }
 
 .square{
@@ -12,35 +12,36 @@
     height:48px;
     text-align: center;
     /*line-height: 40px;*/
-    font-size: 40px;
-    border-right:1px solid black;
-    border-bottom: 1px solid black;
+    font-size: 30px;
+    border-right:1px solid #106d29;
+    border-bottom: 1px solid #106d29;
     /*float:left;*/
     display:inline-block;
     cursor: pointer; 
-    background-color: green;
+    background-color: #159637;
+    line-height:48px;
 }
 .square:nth-child(even){
-    background-color: blue;
+    background-color: #2cba51;
 }
 
-.row:nth-child(even).square{
-    background-color: blue;
+.row:nth-child(even) .square{
+    background-color: #2cba51;
 }
-.row:nth-child(even).square:nth-child(even){
-    background-color: green;
+.row:nth-child(even) .square:nth-child(even){
+    background-color: #159637;
 }
 
 .square:first-child{
-    border-left:1px solid black;
+    border-left:1px solid #106d29;
 }
 
 .square.mine{
-    background-color: red;
+    background-color: red !important;
 }
 
 .square.selected{
-    background-color:yellow;
+    background-color:#a86b32 !important;
 }
 
 .icon{
