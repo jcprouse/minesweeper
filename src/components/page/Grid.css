@@ -1,0 +1,50 @@
+.row{
+    display:block;
+    white-space:nowrap;
+}
+
+.row:first-child .square{
+    border-top:1px solid black;
+}
+
+.square{
+    width:48px;
+    height:48px;
+    text-align: center;
+    /*line-height: 40px;*/
+    font-size: 40px;
+    border-right:1px solid black;
+    border-bottom: 1px solid black;
+    /*float:left;*/
+    display:inline-block;
+    cursor: pointer; 
+    background-color: green;
+}
+.square:nth-child(even){
+    background-color: blue;
+}
+
+.row:nth-child(even).square{
+    background-color: blue;
+}
+.row:nth-child(even).square:nth-child(even){
+    background-color: green;
+}
+
+.square:first-child{
+    border-left:1px solid black;
+}
+
+.square.mine{
+    background-color: red;
+}
+
+.square.selected{
+    background-color:yellow;
+}
+
+.icon{
+    color:black;
+    font-size: 1em !important;
+    line-height: 48px !important;
+}
