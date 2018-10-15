@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 import Row from './Row'
 import './Grid.css';
 
-class GridItem{
+export class GridItem{
     constructor(id){
         this.id = id;
         this.mine = false;
         this.selected = false;
         this.value = '';
+        this.lock = false;
     }
 }
 
 class Grid extends Component {
     constructor(props) {
         super(props);
-        console.log("Grid constructor x:"+this.props.x+" y:"+this.props.y)
+
         this.state={
             gridItems: null,
             gameOver: null
@@ -26,11 +27,12 @@ class Grid extends Component {
         this.generateGridItems(this.props.x*this.props.y);
     }
 
-    componentDidUpdate(prevProps){
-        this.checkStatus();
+    componentDidUpdate(){
+        if (this.state.remaining === 0 && !this.state.gameOver)
+            this.win();
     }
 
-    generateGridItems(gridCount/*gridX, gridY*/){
+    generateGridItems(gridCount){
         // 10% of available items will be mines
         let mineCount = Math.ceil(gridCount/10);
         // Initialise array with default grid items
@@ -50,20 +52,21 @@ class Grid extends Component {
                 }
             }
         }
-        /*console.log(gridItems);
-        console.log(mineIds);
-        console.log(gridCount-mineCount);*/
         this.setState({gridItems:gridItems, mineIds:mineIds, remaining: gridCount-mineCount});
     }
 
-    checkStatus(){
-        if (this.state.remaining === 0 && !this.state.gameOver)
-            this.win();
+    lockGridItem(id){
+        const gridItems = this.state.gridItems;
+        gridItems[id].lock = !gridItems[id].lock;
+        this.setState({gridItems:gridItems});
     }
 
     selectGridItem(id){
         const gridItems = this.state.gridItems;
         
+        if (gridItems[id].lock) 
+            return;
+
         if (gridItems[id].mine){
             this.lose();
             return;
@@ -71,34 +74,12 @@ class Grid extends Component {
         
         gridItems[id].selected = true;
 
-       // console.log(this.state.remaining)
-//        var remaining = this.state.remaining;
         this.setState(function(currentState) {
             return { remaining: currentState.remaining - 1 };
-          });
+        });
 
-       /* let remaining = this.state.remaining;
-        remaining = --remaining;
-        this.setState({remaining:remaining})*/
-      //  console.log(this.state.remaining)
-
-        /*var remaining = this.state.remaining;
-        remaining = --remaining;
-        console.log(remaining);*/
-
-
-
-        // We're going to get all ids of surrounding elements
-        var toCheck = [id-this.props.x, id+this.props.x];
-        // We don't want to check 'right' items if the item is on the left side of the grid,
-        if (id !== 0 && id % this.props.x !== 0) {
-            toCheck.push(id-this.props.x-1, id-1, id+this.props.x-1);
-        }
-        // ..and vice versa
-        if (id !== (gridItems.length-1) && (id+1) % this.props.x !== 0) {
-            console.log('not on the right')
-            toCheck.push(id-this.props.x+1, id+1, id+this.props.x+1);
-        }
+        // We're going to work out the ids of valid surrounding elements
+        var toCheck = this.calculateSurroundingItemIds(id,gridItems.length);
 
         let gridItemValue = 0;
         for (var i=0;i<toCheck.length;i++){
@@ -110,10 +91,6 @@ class Grid extends Component {
         if (gridItemValue > 0) {
             gridItems[id].value = gridItemValue;
             this.setState({gridItems:gridItems}); 
-            //console.log(remaining)
-            /*if (this.state.remaining === 0){
-                this.winner();
-            }*/
         }
         else {
             for (i=0;i<toCheck.length;i++){
@@ -122,6 +99,19 @@ class Grid extends Component {
                     this.selectGridItem(toCheck[i])
             }
         }          
+    }
+
+    calculateSurroundingItemIds(id, maxGridSize){
+        var idList = [id-this.props.x, id+this.props.x];
+        // We don't want to check 'right' items if the item is on the left side of the grid,
+        if (id !== 0 && id % this.props.x !== 0) {
+            idList.push(id-this.props.x-1, id-1, id+this.props.x-1);
+        }
+        // ..and vice versa
+        if (id !== (maxGridSize-1) && (id+1) % this.props.x !== 0) {
+            idList.push(id-this.props.x+1, id+1, id+this.props.x+1);
+        }
+        return idList;
     }
 
     win(){
@@ -141,10 +131,9 @@ class Grid extends Component {
             rows.push(this.state.gridItems.slice(xIndex,xIndex+this.props.x));
             i++;
         }
-        console.log(rows);
         return (
             <span>
-                {rows.map((items, i) => <Row items={items} key={i} handleClick={(id) => this.selectGridItem(id)} gameOver={this.state.gameOver}/>)}
+                {rows.map((items, i) => <Row items={items} key={i} handleClick={(id) => this.selectGridItem(id)} handleContextMenu={(id)=>this.lockGridItem(id)} gameOver={this.state.gameOver} cheatMode={this.props.cheatMode}/>)}
             </span>
         );
     };

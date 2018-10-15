@@ -1,45 +1,26 @@
-import React/*, { Component }*/ from 'react';
+import React from 'react';
 
-/*class Square extends Component {
-
-
-    render() {
-        const mine = this.props.item.mine ? 'mine' : '';
-        const selected = this.props.item.selected ? 'selected' : '';
-        const classes = `${mine} ${selected} square`
-        return (
-            <div className={classes} onClick={()=>
-                this.props.item.selected === false ? 
-                this.props.handleClick(this.props.item.id) :
-                false
-            }>{this.props.item.value}</div>
-        );
-    };
-}*/
-
-
-/*const Square = (props) => {*/
 function Square(props){
-    const mine = props.item.mine ? 'mine' : '';
+    const mine = props.item.mine && props.cheatMode ? 'mine' : '';
     const selected = props.item.selected ? 'selected' : '';
-    const classes = `${mine} ${selected} square ${props.item.id}`
+    const classes = `${mine} ${selected} square v${props.item.value} `
+
+    var contents;
+    if (props.gameOver && props.item.mine) contents=<i className="fa fa-bomb icon"></i>
+    else if (props.item.lock) contents=<i className="fa fa-map-pin icon"></i>
+    else contents = props.item.value ? props.item.value : '\xa0';
+
     return (
         <div className={classes} onClick={()=>
-            !props.item.selected && !props.gameOver ? 
+            !props.item.selected && !props.gameOver && !props.item.lock ? 
             props.handleClick(props.item.id) :
             false
-        }>
-            
-            {props.gameOver && props.item.mine ? 
-            <i className="fa fa-bomb icon"></i> : 
-                (props.item.value ? 
-                props.item.value : 
-                '\xa0')
-            }
-            
+        }
+        onContextMenu={(e) => 
+            {props.handleContextMenu(props.item.id);e.preventDefault()}}>
+            {contents}
+        
         </div>
     );
 }
-
-
 export default Square;
