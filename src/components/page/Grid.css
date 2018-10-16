@@ -1,28 +1,39 @@
-body{
-    margin:12px;
-}
 .header {
     margin-bottom: 20px;
     display:block;
 }
+.header .title{
+    display: block;
+    margin-bottom: 12px;
+    font-size: 20px;
+    color:#275327;
+}
 .header .menu {
 
-    background-color: #dee1e6;
+    background-color: #bad8ba;
     display:inline-block;
     padding: 10px;
-    border:2px solid #b5b7b9;
+    border:2px solid #7b9e7b;
 }
 .input{
     width:40px;
     margin:0 10px 0px 10px;
+    border-radius: 20%;
+    border:1px solid #7bc27a;
+    padding: 0px 2px 0px 2px;
+    height:30px;
+}
+.checkbox{
+    border:1px solid #7bc27a;
 }
 .button{
-    margin-right:10px;
-    border-radius: 40%;
+    margin-right:30px;
+    border-radius: 10%;
     border:none;
-    height:40px;
+    height:30px;
     padding: 0px 10px 0px 10px;
-    background-color:#93c5ff;
+    background-color:#a0eb9f;
+    border:1px solid #7bc27a;
 }
 .button:focus{
     outline: none;
@@ -43,10 +54,15 @@ body{
     font-size: 20px;
     border-right:1px solid #106d29;
     border-bottom: 1px solid #106d29;
+    border-left: 1px solid #98dbaa;
+    border-top: 1px solid #98dbaa;
     display:inline-block;
     cursor: pointer; 
     background-color: #159637;
     line-height:30px;
+    background-image: url("res/square.png");
+    background-position: center;
+    background-position-y: 0px 
 }
 .square:nth-child(even){
     background-color: #2cba51;
@@ -63,12 +79,24 @@ body{
     border-left:1px solid #106d29;
 }
 
-.square.mine{
-    background-color: red !important;
+.square.cheat{
+    background-color: #b18585 !important;
+}
+
+.square.reveal{
+    background-color: #ccbda0 !important;
+    background-position-y: 60px !important;
+}
+
+.square.pin{
+    background-position-y: 30px;
 }
 
 .square.selected{
     background-color:#a39376 !important;
+    border-left:1px solid #a39376;
+    border-top:
+    1px solid #a39376;
 }
 .square.selected.v1{
     color: #71F2EE; background-color:#796d58 !important;
@@ -98,4 +126,9 @@ body{
     color:black;
     font-size: 1em !important;
     line-height: 30px !important;
+}
+
+.footer{
+    display:block;
+    margin-top: 12px;
 }
