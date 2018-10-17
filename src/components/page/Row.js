@@ -1,12 +1,10 @@
 import React from 'react';
 import Square from './Square'
 
-function Row(props) {
-    return (
-        <span className="row">
-            {props.items.map((item) => <Square key={item.id} item={item} handleClick={(id) => props.handleClick(id)} handleContextMenu={(id) => props.handleContextMenu(id)} gameOver={props.gameOver} cheatMode={props.cheatMode} />)}
-        </span>
-    );
-}
+const Row = ({items, handleClick, handleContextMenu, isGameOver, cheatModeOn}) => (
+    <span className="row">
+        {items.map((item) => <Square key={item.id} item={item} handleClick={(id) => handleClick(id)} handleContextMenu={(id) => handleContextMenu(id)} isGameOver={isGameOver} cheatModeOn={cheatModeOn} />)}
+    </span>
+);
 
 export default Row;

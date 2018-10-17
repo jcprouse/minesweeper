@@ -16,12 +16,12 @@ describe('<Grid> shallow test suite', () => {
   });
 
   it('correct classes are rendered for cheatMode', () => {
-    const defaultWrapper = shallow(<Square item={generateMockGridItem(true)} cheatMode={true} />);
+    const defaultWrapper = shallow(<Square item={generateMockGridItem(true)} cheatModeOn={true} />);
     expect(defaultWrapper.find('div').props().className).toContain('cheat');
   });
 
   it('correct classes are rendered for bomb reveal', () => {
-    const defaultWrapper = shallow(<Square item={generateMockGridItem(true)} gameOver={true} />);
+    const defaultWrapper = shallow(<Square item={generateMockGridItem(true)} isGameOver={true} />);
     expect(defaultWrapper.find('div').props().className).toContain('reveal');
   });
 
@@ -40,11 +40,11 @@ describe('<Grid> shallow test suite', () => {
     expect(defaultWrapper.find('div').props().className).toContain('v1');
   });
 
-  function generateMockGridItem(mine, lock, selected, value) {
+  function generateMockGridItem(mine, locked, selected, value) {
     const gridItem = new GridItem();
-    gridItem.mine = mine;
-    gridItem.lock = lock;
-    gridItem.selected = selected;
+    gridItem.isMine = mine;
+    gridItem.isLocked = locked;
+    gridItem.isSelected = selected;
     gridItem.value = value;
     return gridItem;
   }

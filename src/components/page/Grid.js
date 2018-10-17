@@ -5,17 +5,17 @@ import './Grid.css';
 export class GridItem {
     constructor(id) {
         this.id = id;
-        this.mine = false;
-        this.selected = false;
+        this.isMine = false;
+        this.isSelected = false;
         this.value = '';
-        this.lock = false;
+        this.isLocked = false;
     }
 }
 
 class Grid extends Component {
     constructor(props) {
         super(props);
-        this.state = { gridItems: null, gameOver: null }
+        this.state = { gridItems: null, isGameOver: null }
     }
 
     componentDidMount() {
@@ -23,100 +23,99 @@ class Grid extends Component {
     }
 
     componentDidUpdate() {
-        if (this.state.remaining === 0 && !this.state.gameOver)
+        if (this.state.remaining === 0 && !this.state.isGameOver)
             this.win();
     }
 
     generateGridItems(gridCount) {
+        const gridItemCount = this.props.x * this.props.y;
         // 10% of available items will be mines
-        const mineCount = Math.ceil(gridCount / 10);
+        const mineCount = Math.ceil(gridItemCount / 10);
         // Initialise array with default grid items
         const gridItems = [];
         const mineIds = [];
-        for (let i = 0; i < gridCount; i++)
+        for (let i = 0; i < gridItemCount; i++)
             gridItems.push(new GridItem(i));
 
         // Generate mine positions and mark in array
         for (let i = 0; i < mineCount; i++) {
             while (true) {
-                let pos = Math.floor(Math.random() * gridCount);
-                if (!gridItems[pos].mine) {
-                    gridItems[pos].mine = true;
+                let pos = Math.floor(Math.random() * gridItemCount);
+                if (!gridItems[pos].isMine) {
+                    gridItems[pos].isMine = true;
                     mineIds.push(pos);
                     break;
                 }
             }
         }
-        this.setState({ gridItems: gridItems, mineIds: mineIds, remaining: gridCount - mineCount });
+        this.setState({ gridItems, mineIds: mineIds, remaining: gridItemCount - mineCount });
     }
 
     lockGridItem(id) {
         const gridItems = this.state.gridItems;
-        gridItems[id].lock = !gridItems[id].lock;
-        this.setState({ gridItems: gridItems });
+        gridItems[id].isLocked = !gridItems[id].isLocked;
+        this.setState({ gridItems });
     }
 
     selectGridItem(id) {
         const gridItems = this.state.gridItems;
 
-        if (gridItems[id].lock)
+        if (gridItems[id].isLocked)
             return;
 
-        if (gridItems[id].mine) {
+        if (gridItems[id].isMine) {
             this.lose();
             return;
         }
 
-        gridItems[id].selected = true;
+        gridItems[id].isSelected = true;
 
         // Set state is asynchronous - this function ensures all decrements of remaining are captured
         this.setState(function (currentState) {
             return { remaining: currentState.remaining - 1 };
         });
 
-        // We're going to work out the ids of valid surrounding elements
-        const toCheck = this.calculateSurroundingItemIds(id, gridItems.length);
+        const surroundingGridItemIds = this.calculateSurroundingItemIds(id);
 
-        var gridItemValue = 0;
-        for (let i = 0; i < toCheck.length; i++) {
-            if (this.state.mineIds.includes(toCheck[i]))
-                gridItemValue++;
+        var numberOfMinesAround = 0;
+        for (let i = 0; i < surroundingGridItemIds.length; i++) {
+            if (this.state.mineIds.includes(surroundingGridItemIds[i]))
+                numberOfMinesAround++;
         };
 
-        // If we've got at least one mine around, that's enough
-        if (gridItemValue > 0) {
-            gridItems[id].value = gridItemValue;
-            this.setState({ gridItems: gridItems });
+        if (numberOfMinesAround > 0) {
+            gridItems[id].value = numberOfMinesAround;
+            this.setState({ gridItems });
         }
-        // Otherwise we'll need to perform a 'select' action on squares on the perimeter
+
         else {
-            for (let a = 0; a < toCheck.length; a++) {
+            for (let a = 0; a < surroundingGridItemIds.length; a++) {
                 // Remove any Ids that are smaller or bigger than the grid size, along with any already selected
-                if (toCheck[a] >= 0 && toCheck[a] < (this.props.x * this.props.y) && !gridItems[toCheck[a]].selected)
-                    this.selectGridItem(toCheck[a])
+                if (surroundingGridItemIds[a] >= 0 && surroundingGridItemIds[a] < (this.props.x * this.props.y) && !gridItems[surroundingGridItemIds[a]].isSelected)
+                    this.selectGridItem(surroundingGridItemIds[a])
             }
         }
     }
 
-    calculateSurroundingItemIds(id, maxGridSize) {
+    calculateSurroundingItemIds(id) {
         const idList = [id - this.props.x, id + this.props.x];
         // We don't want to check 'left' items if the item is on the left side of the grid,
         if (id !== 0 && id % this.props.x !== 0) {
             idList.push(id - this.props.x - 1, id - 1, id + this.props.x - 1);
         }
         // ..and vice versa
-        if (id !== (maxGridSize - 1) && (id + 1) % this.props.x !== 0) {
+        if (id !== (this.props.x * this.props.y - 1) && (id + 1) % this.props.x !== 0) {
             idList.push(id - this.props.x + 1, id + 1, id + this.props.x + 1);
         }
         return idList;
     }
 
     win() {
-        this.setState({ gameOver: true });
+        this.setState({ isGameOver: true });
         this.props.onWin();
     }
     lose() {
-        this.setState({ gameOver: true });
+        this.setState({ isGameOver: true });
         this.props.onLose();
     }
 
@@ -131,7 +130,7 @@ class Grid extends Component {
         }
         return (
             <span>
-                {rows.map((items, i) => <Row items={items} key={i} handleClick={(id) => this.selectGridItem(id)} handleContextMenu={(id) => this.lockGridItem(id)} gameOver={this.state.gameOver} cheatMode={this.props.cheatMode} />)}
+                {rows.map((items, i) => <Row items={items} key={i} handleClick={(id) => this.selectGridItem(id)} handleContextMenu={(id) => this.lockGridItem(id)} isGameOver={this.state.isGameOver} cheatModeOn={this.props.cheatModeOn} />)}
             </span>
         );
     };

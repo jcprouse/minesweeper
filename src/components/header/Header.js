@@ -13,7 +13,7 @@ function Header(props) {
                 <input id="inputY" ref={inputYref} className="input" type="number" min="1" defaultValue={props.y} />
                 <button className="button" onClick={() => props.newGame(inputXref.current.value, inputYref.current.value)}>New Game</button>
                 <label>Cheat mode</label>
-                <input className="checkbox" type="checkbox" defaultChecked={props.cheatMode} onClick={() => props.setCheatMode()} />
+                <input className="checkbox" type="checkbox" defaultChecked={props.cheatModeOn} onClick={() => props.setCheatMode()} />
             </span>
         </span>
     );

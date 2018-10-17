@@ -12,7 +12,7 @@ class App extends Component {
       gameNo: 1,
       winner: null,
       lose: null,
-      cheatMode: false
+      cheatModeOn: false
     }
   }
 
@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   setCheatMode() {
-    this.setState({ cheatMode: !this.state.cheatMode });
+    this.setState({ cheatModeOn: !this.state.cheatModeOn });
   }
   onWin() {
     this.setState({ winner: true })
@@ -34,8 +34,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header x={this.state.gridX} y={this.state.gridY} newGame={(x, y) => this.newGame(x, y)} cheatMode={this.state.cheatMode} setCheatMode={() => this.setCheatMode()} />
-        <Grid key={this.state.gameNo} x={this.state.gridX} y={this.state.gridY} onWin={() => this.onWin()} onLose={() => this.onLose()} cheatMode={this.state.cheatMode} />
+        <Header x={this.state.gridX} y={this.state.gridY} newGame={(x, y) => this.newGame(x, y)} cheatModeOn={this.state.cheatModeOn} setCheatMode={() => this.setCheatMode()} />
+        <Grid key={this.state.gameNo} x={this.state.gridX} y={this.state.gridY} onWin={() => this.onWin()} onLose={() => this.onLose()} cheatModeOn={this.state.cheatModeOn} />
         <Footer winner={this.state.winner} lose={this.state.lose} />
       </div>
     );

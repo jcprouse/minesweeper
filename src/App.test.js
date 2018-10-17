@@ -35,16 +35,16 @@ describe('<App> shallow test suite', () => {
 
     expect(gridProps.x).toEqual(defaultWrapper.state().gridX);
     expect(gridProps.y).toEqual(defaultWrapper.state().gridY);
-    expect(gridProps.cheatMode).toEqual(defaultWrapper.state().cheatMode);
+    expect(gridProps.cheatModeOn).toEqual(defaultWrapper.state().cheatModeOn);
   });
 
   it('setCheatMode method will mark cheats as on and off', () => {
-    defaultWrapper.setState({ cheatMode: false });
+    defaultWrapper.setState({ cheatModeOn: false });
 
     defaultInstance.setCheatMode();
-    expect(defaultWrapper.state().cheatMode).toEqual(true)
+    expect(defaultWrapper.state().cheatModeOn).toEqual(true)
     defaultInstance.setCheatMode();
-    expect(defaultWrapper.state().cheatMode).toEqual(false)
+    expect(defaultWrapper.state().cheatModeOn).toEqual(false)
   });
 
   it('onWin method updates state', () => {
